@@ -1,0 +1,41 @@
+	Mon Feb 13 02:53 2012 Time and Allocation Profiling Report  (Final)
+
+	   371 +RTS -p -K100M -RTS
+
+	total time  =        2.46 secs   (123 ticks @ 20 ms)
+	total alloc = 1,226,794,600 bytes  (excludes profiling overheads)
+
+COST CENTRE                    MODULE               %time %alloc
+
+answer                         Main                  67.5   92.2
+f                              Main                  32.5    7.8
+
+
+                                                                                               individual    inherited
+COST CENTRE              MODULE                                               no.    entries  %time %alloc   %time %alloc
+
+MAIN                     MAIN                                                   1           0   0.0    0.0   100.0  100.0
+ CAF:main1               Main                                                 311           1   0.0    0.0     0.0    0.0
+  main                   Main                                                 318           1   0.0    0.0     0.0    0.0
+ CAF:main2               Main                                                 310           1   0.0    0.0     0.0    0.0
+  main                   Main                                                 319           0   0.0    0.0     0.0    0.0
+ CAF:main3               Main                                                 309           1   0.0    0.0     0.0    0.2
+  main                   Main                                                 320           0   0.0    0.0     0.0    0.2
+   answer                Main                                                 321           3   0.0    0.2     0.0    0.2
+ CAF:main4               Main                                                 308           1   0.0    0.0     0.0    0.0
+ CAF:main5               Main                                                 307           1   0.0    0.0     5.7    7.9
+  answer                 Main                                                 325           1   5.7    7.9     5.7    7.9
+ CAF:main6               Main                                                 306           1   0.0    0.0    61.8   84.0
+  answer                 Main                                                 326           0  61.8   84.0    61.8   84.0
+ CAF:g                   Main                                                 305           1   0.0    0.0     0.0    0.0
+  g                      Main                                                 327           1   0.0    0.0     0.0    0.0
+ CAF:main10              Main                                                 304           1   0.0    0.0    32.5    7.8
+  answer                 Main                                                 323           0   0.0    0.0    32.5    7.8
+   f                     Main                                                 324      800604  32.5    7.8    32.5    7.8
+ CAF                     GHC.Float                                            281           2   0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.FD                                     240           2   0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Encoding.Iconv                                198           2   0.0    0.0     0.0    0.0
+ CAF                     GHC.Conc.Signal                                      195           1   0.0    0.0     0.0    0.0
+ CAF                     System.Random                                        186           1   0.0    0.0     0.0    0.0
+ CAF                     Data.Fixed                                           181           1   0.0    0.0     0.0    0.0
+ CAF                     Data.Time.Clock.POSIX                                178           2   0.0    0.0     0.0    0.0

@@ -1,0 +1,1 @@
+squares = map (\x -> x*x) [1..]
