@@ -21,9 +21,6 @@ synopsis:            A dump of my Project Euler solutions
 -- The license under which the package is released.
 -- license:             
 
--- The file containing the license text.
-license-file:        LICENSE
-
 -- The package author(s).
 author:              Michael Burge
 
@@ -41,14 +38,13 @@ build-type:          Simple
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:       >=1.8
 
+library
+  exposed-modules: Problems
+  build-depends: base
 
-executable projecteuler
-  -- .hs or .lhs file containing the Main module.
-  -- main-is:             
-  
-  -- Modules included in this executable, other than Main.
-  -- other-modules:       
-  
-  -- Other library packages from which modules are imported.
-  build-depends:       base ==4.5.*, containers ==0.5.*, parsec ==3.1.*
-  
+benchmark bench-problems
+  type: exitcode-stdio-1.0
+  hs-source-dirs: .
+  main-is: BenchAll.hs
+  build-depends: base, criterion, containers, parsec
+  ghc-options: -O2
