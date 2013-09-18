@@ -4,3 +4,5 @@
 *.prof
 /dist
 *#*
+*.csv
+cabal-dev/

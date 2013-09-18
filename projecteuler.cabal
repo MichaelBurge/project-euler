@@ -11,16 +11,10 @@ cabal-version:       >=1.8
 
 
 
-library
-  exposed-modules: Problems
+executable problems
+  main-is: Main.hs
   build-depends: base, criterion, containers, deepseq, parsec, digits
-
-benchmark problems
-  type: exitcode-stdio-1.0
-  hs-source-dirs: .
-  main-is: BenchProblems.hs
-  build-depends: base, criterion, containers, deepseq, parsec, digits
-  ghc-options: -O2
+  ghc-options: -O2 -threaded -auto-all
 
 benchmark libraries
   type: exitcode-stdio-1.0
