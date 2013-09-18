@@ -4,6 +4,17 @@ import Data.Function
 import Data.List
 import Data.Ratio
 
+foldDigits :: Integer -> (a -> Int -> a) -> a -> Integer -> a
+foldDigits _ _ acc 0 = acc
+foldDigits 10 f acc n = foldl' f acc $ map (fromIntegral . digitToInt) $ show n
+foldDigits base f acc n = 
+  let digit = fromIntegral $ n `rem` base
+      rest = n `quot` base
+  in foldDigits base f (f acc digit ) rest
+
+--toDigits :: Integer -> Integer -> [Int]
+--toDigits b n = foldDigits b (flip (:)) [] n
+
 toDigits b 0 = []
 toDigits 10 n = map (fromIntegral . digitToInt) $ show n
 toDigits b n = (n `rem` b) : (toDigits b $ n `quot` b)
@@ -12,7 +23,17 @@ fromDigits :: Integer -> [Integer] -> Integer
 fromDigits b = 
   let f i [] = []
       f i (x:xs) = (i * x) : (f (i*b) xs)
-  in sum . (f 1)
+  in sum . f 1
+--snd $ foldl' (\(i, acc) (x:xs) -> (i+1, acc + (i * x))) (1, 0)
+
+-- replaceDigit :: Integer -> Int -> Integer
+-- replaceDigit n i new =
+--   let f _ _ []  = error "Bad index in replaceDigit: " ++ show [n, i, new]
+--       f i prevs (x:xs) =
+--           case i of
+--             0 -> (reverse prevs) ++ [new] ++ xs
+--             otherwise -> f (i-1) (x:prevs) xs
+--   in fromDigits 10 $ f i [] $ toDigits 10 n
      
 reduced x y = (fromDigits 10 $ (toDigits 10 x) \\ (toDigits 10 y))
 

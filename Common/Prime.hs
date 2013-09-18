@@ -19,12 +19,15 @@ possibleFactors n = fromList $ List.takeWhile (\x -> x*x <= n) [1..]
 smallFactors n = filter (isFactor n) (possibleFactors n)
 largesFromSmalls n smalls = map (n `quot`) smalls
 largeFactors n = largesFromSmalls n $ smallFactors n
+smallPrimes = takeWhile (<200) primes
 factors n = 
   let sf = smallFactors n
   in sf `union` (largesFromSmalls n sf)
-prime n = if n < 2 
-          then False
-          else null $ (factors n) \\ (fromList [1, n])
+prime n =
+    case () of _
+      | n < 2 -> False
+      | any (\p -> n /= p && n `rem` p == 0) -> True
+      | otherwise -> null $ (factors n) \\ (fromList [1, n])
 allPrimes = (:) 2 $ 
          Prelude.filter (\x -> all (\y -> (x `rem` y) /= 0) $ 
                                (List.takeWhile (\y -> y*y <= x) allPrimes)
