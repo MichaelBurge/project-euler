@@ -9,9 +9,11 @@ build-type:          Simple
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:       >=1.8
 
+
+
 library
   exposed-modules: Problems
-  build-depends: base
+  build-depends: base, criterion, containers, deepseq, parsec, digits
 
 benchmark problems
   type: exitcode-stdio-1.0
@@ -29,9 +31,13 @@ benchmark libraries
 
 test-suite tests
   type: exitcode-stdio-1.0
-  build-depends: QuickCheck -any, base -any, test-framework, test-framework-quickcheck2, test-framework-hunit, digits, HUnit
+  build-depends: QuickCheck -any, base -any, test-framework, test-framework-quickcheck2, test-framework-hunit, digits, HUnit, containers
   type: exitcode-stdio-1.0
   main-is: Tests/Main.hs
   buildable: True
   hs-source-dirs: .
   ghc-options: -rtsopts -with-rtsopts=-M512m
+
+source-repository head
+  type: git
+  location: https://github.com/MichaelBurge/project-euler

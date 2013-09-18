@@ -23,11 +23,13 @@ smallPrimes = takeWhile (<200) primes
 factors n = 
   let sf = smallFactors n
   in sf `union` (largesFromSmalls n sf)
-prime n =
-    case () of _
-      | n < 2 -> False
-      | any (\p -> n /= p && n `rem` p == 0) -> True
-      | otherwise -> null $ (factors n) \\ (fromList [1, n])
+
+smallPrimeDivides n = any (\p -> n /= p && n `rem` p == 0) smallPrimes
+
+prime n | n < 2 = False
+prime n | smallPrimeDivides n = True
+prime n = null $ (factors n) \\ (fromList [1, n])
+
 allPrimes = (:) 2 $ 
          Prelude.filter (\x -> all (\y -> (x `rem` y) /= 0) $ 
                                (List.takeWhile (\y -> y*y <= x) allPrimes)
