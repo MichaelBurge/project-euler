@@ -4,6 +4,7 @@ import Control.DeepSeq(NFData)
 import Criterion.Config
 import Criterion.Main
 import Common.Digits(foldDigits, fromDigits, toDigits)
+import Data.Digits(digitsRev, unDigits)
 import Types
 
 bigNumber :: Integer
@@ -22,9 +23,18 @@ toAndFromTest b = fromDigits b . map (\x -> fromIntegral $ x + 1 `quot` b) . toD
 main = Criterion.Main.defaultMain $
        [
         baseBench "foldDigits" foldDigitsTest,
-        baseBench "toDigits" toDigits,
+        bcompare $ [
+          benchNParam "digits" digitsRev [2] bigNumber,
+          benchNParam "toDigits" toDigits [2] bigNumber
+        ],
+        bcompare $ [
+          benchNParam "digits" digitsRev [10] bigNumber,
+          benchNParam "toDigits" toDigits [10] bigNumber
+        ],
         baseBench "to-and-from-digits" toAndFromTest,
-        let digits = toDigits 3 bigNumber
-        in bench "fromDigits 3" $ nf (fromDigits 3) digits
-
+        let testDigits = toDigits 3 bigNumber
+          in bcompare [
+           bench "undigits 3" $ nf (unDigits 3 . reverse) testDigits,
+           bench "fromDigits 3" $ nf (fromDigits 3) testDigits
+        ]
        ]
