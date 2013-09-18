@@ -5,6 +5,10 @@ import Data.List
 import Data.Ratio
 import qualified Data.Digits
 
+numDigits :: Integer -> Integer -> Int
+numDigits 10 = length . show
+numDigits b = length . toDigits b
+
 foldDigits :: Integer -> (a -> Int -> a) -> a -> Integer -> a
 foldDigits _ _ acc 0 = acc
 foldDigits 10 f acc n = foldr (flip f) acc $ map (fromIntegral . digitToInt) $ show n
@@ -21,15 +25,11 @@ toDigits b n = Data.Digits.digits b n
 fromDigits :: Integer -> [Integer] -> Integer
 fromDigits = Data.Digits.unDigits
 
--- replaceDigit :: Integer -> Int -> Integer
--- replaceDigit n i new =
---   let f _ _ []  = error "Bad index in replaceDigit: " ++ show [n, i, new]
---       f i prevs (x:xs) =
---           case i of
---             0 -> (reverse prevs) ++ [new] ++ xs
---             otherwise -> f (i-1) (x:prevs) xs
---   in fromDigits 10 $ f i [] $ toDigits 10 n
-     
+replaceDigits :: Integer -> Integer -> Integer -> [Bool] -> Integer
+replaceDigits base value n positions =
+    fromDigits base $
+    zipWith (\d b -> if b then value else d) (toDigits base n) positions
+
 reduced x y = (fromDigits 10 $ (toDigits 10 x) \\ (toDigits 10 y))
 
 -- This needs work to be used for all fractions; only valid for n <= 100.

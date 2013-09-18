@@ -29,7 +29,7 @@ benchmark libraries
 
 test-suite tests
   type: exitcode-stdio-1.0
-  build-depends: QuickCheck -any, base -any, test-framework, test-framework-quickcheck2, test-framework-hunit, digits
+  build-depends: QuickCheck -any, base -any, test-framework, test-framework-quickcheck2, test-framework-hunit, digits, HUnit
   type: exitcode-stdio-1.0
   main-is: Tests/Main.hs
   buildable: True
