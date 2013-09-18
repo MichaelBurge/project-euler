@@ -4,11 +4,15 @@ import Control.DeepSeq(NFData)
 import Criterion.Config
 import Criterion.Main
 import Common.Digits(foldDigits, fromDigits, toDigits)
+import Common.Prime(factors)
 import Data.Digits(digitsRev, unDigits)
 import Types
 
 bigNumber :: Integer
 bigNumber = 1234567891011121314151617181920
+numToFactor :: Integer
+numToFactor = 1578292929
+
 benchNParam :: NFData b => String -> (Integer -> a -> b) -> [Integer] -> a -> Benchmark
 benchNParam name f bs n = 
     bgroup name $
@@ -22,19 +26,20 @@ toAndFromTest b = fromDigits b . map (\x -> fromIntegral $ x + 1 `quot` b) . toD
 
 main = Criterion.Main.defaultMain $
        [
-        baseBench "foldDigits" foldDigitsTest,
-        bcompare $ [
-          benchNParam "digits" digitsRev [2] bigNumber,
-          benchNParam "toDigits" toDigits [2] bigNumber
-        ],
-        bcompare $ [
-          benchNParam "digits" digitsRev [10] bigNumber,
-          benchNParam "toDigits" toDigits [10] bigNumber
-        ],
-        baseBench "to-and-from-digits" toAndFromTest,
-        let testDigits = toDigits 3 bigNumber
-          in bcompare [
-           bench "undigits 3" $ nf (unDigits 3 . reverse) testDigits,
-           bench "fromDigits 3" $ nf (fromDigits 3) testDigits
-        ]
+        -- baseBench "foldDigits" foldDigitsTest,
+        -- bcompare $ [
+        --   benchNParam "digits" digitsRev [2] bigNumber,
+        --   benchNParam "toDigits" toDigits [2] bigNumber
+        -- ],
+        -- bcompare $ [
+        --   benchNParam "digits" digitsRev [10] bigNumber,
+        --   benchNParam "toDigits" toDigits [10] bigNumber
+        -- ],
+        -- baseBench "to-and-from-digits" toAndFromTest,
+        -- let testDigits = toDigits 3 bigNumber
+        --   in bcompare [
+        --    bench "undigits 3" $ nf (unDigits 3 . reverse) testDigits,
+        --    bench "fromDigits 3" $ nf (fromDigits 3) testDigits
+        -- ],
+        bench "factors" $ nf factors numToFactor
        ]

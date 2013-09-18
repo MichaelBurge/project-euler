@@ -15,8 +15,8 @@ primes = allPrimes
 --primes = takeWhile (<238208) allPrimes
 
 isFactor n k = 0 == (rem n k)
-possibleFactors n = fromList $ List.takeWhile (\x -> x*x <= n) [1..]
-smallFactors n = filter (isFactor n) (possibleFactors n)
+possibleFactors n = List.takeWhile (\x -> x*x <= n) [1..]
+smallFactors n = fromList $ List.filter (isFactor n) (possibleFactors n)
 largesFromSmalls n smalls = map (n `quot`) smalls
 largeFactors n = largesFromSmalls n $ smallFactors n
 smallPrimes = takeWhile (<200) primes
@@ -27,7 +27,7 @@ factors n =
 smallPrimeDivides n = any (\p -> n /= p && n `rem` p == 0) smallPrimes
 
 prime n | n < 2 = False
-prime n | smallPrimeDivides n = True
+prime n | smallPrimeDivides n = False
 prime n = null $ (factors n) \\ (fromList [1, n])
 
 allPrimes = (:) 2 $ 
