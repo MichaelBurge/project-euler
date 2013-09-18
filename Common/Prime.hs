@@ -1,4 +1,4 @@
-module Common.Prime where
+module Common.Prime (modExp, primes, prime, factors) where
 import Prelude hiding (filter,
                        map,
                        null
@@ -9,10 +9,14 @@ import qualified Data.Maybe
 import Data.Set
 
 sum' = fold (+) 0
-
---primes = upTo 10000
 primes = allPrimes
---primes = takeWhile (<238208) allPrimes
+
+modExp :: Integer -> Integer -> Integer -> Integer
+modExp _ _ 0 = 1
+modExp mod base 1 = base `rem` mod
+modExp mod base exponent = flip rem mod $
+    let next = modExp mod (base * base `rem` mod) (exponent `div` 2)
+    in next * (if odd exponent then base else 1)
 
 isFactor n k = 0 == (rem n k)
 possibleFactors n = List.takeWhile (\x -> x*x <= n) [1..]
