@@ -4,7 +4,7 @@ import Control.DeepSeq(NFData)
 import Criterion.Config
 import Criterion.Main
 import Common.Digits(foldDigits, fromDigits, toDigits)
-import Common.Prime(factors)
+import Common.Prime(factors, prime)
 import Data.Digits(digitsRev, unDigits)
 import Types
 
@@ -12,6 +12,9 @@ bigNumber :: Integer
 bigNumber = 1234567891011121314151617181920
 numToFactor :: Integer
 numToFactor = 1578292929
+
+bigPrime :: Integer
+bigPrime = 5754853343
 
 benchNParam :: NFData b => String -> (Integer -> a -> b) -> [Integer] -> a -> Benchmark
 benchNParam name f bs n = 
@@ -41,5 +44,6 @@ main = Criterion.Main.defaultMain $
         --    bench "undigits 3" $ nf (unDigits 3 . reverse) testDigits,
         --    bench "fromDigits 3" $ nf (fromDigits 3) testDigits
         -- ],
-        bench "factors" $ nf factors numToFactor
+        bench "factors" $ nf factors numToFactor,
+        bench "prime" $ nf prime bigPrime
        ]

@@ -35,8 +35,9 @@ isPrp n a = 1 == (modExp n a (n-1))
 isSprp n a =
     let s  = primePower (n-1) 2
         d = oddPart $ n-1
-    in (1 == modExp n a d) ||
-       any (\r -> (n-1) == modExp n (a^d) (2^r)) [0..s]
+        a' = modExp n a d
+    in (1 == a') ||
+       any (\r -> (n-1) == modExp n a' (2^r)) [0..s]
 
 -- See the table in Section 2.3 of http://primes.utm.edu/prove/merged.html
 primeByPrp n = let
@@ -57,7 +58,7 @@ possibleFactors n = List.takeWhile (\x -> x*x <= n) [1..]
 smallFactors n = fromList $ List.filter (isFactor n) (possibleFactors n)
 largesFromSmalls n smalls = map (n `quot`) smalls
 largeFactors n = largesFromSmalls n $ smallFactors n
-smallPrimes = takeWhile (<200) primes
+smallPrimes = takeWhile (<250) primes
 factors n = 
   let sf = smallFactors n
   in sf `union` (largesFromSmalls n sf)
