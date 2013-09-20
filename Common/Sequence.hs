@@ -17,4 +17,10 @@ hexagonals = map (\n -> n * (2 * n -1)) [1..]
 subseqs :: Int -> [Integer] -> [[Integer]]
 subseqs n xs | length xs < n = []
 subseqs n ys@(x:xs) = (take n ys) : (subseqs n xs)
-    
+
+subsequenceOf :: Eq a => [a] -> [a] -> Bool
+subsequenceOf [] _  = True
+subsequenceOf _ [] = False
+subsequenceOf (a:as) (x:xs) =
+    (subsequenceOf (a:as) xs) ||
+    (x == a && subsequenceOf as xs)
