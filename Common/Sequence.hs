@@ -24,3 +24,13 @@ subsequenceOf _ [] = False
 subsequenceOf (a:as) (x:xs) =
     (subsequenceOf (a:as) xs) ||
     (x == a && subsequenceOf as xs)
+
+stripUnneeded :: ([Int] -> Bool) -> [Int] -> [Int]
+stripUnneeded pred =
+  let f acc [] = reverse acc
+      f acc (x:xs) =
+          let comb = (reverse acc) ++ xs
+          in if pred comb
+             then f acc xs
+             else f (x:acc) xs
+  in f []

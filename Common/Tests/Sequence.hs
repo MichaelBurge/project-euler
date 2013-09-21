@@ -1,6 +1,6 @@
 module Common.Tests.Sequence (sequenceTests) where
 
-import Common.Sequence (subsequenceOf)
+import Common.Sequence (stripUnneeded, subsequenceOf)
 import Control.Applicative
 import Control.Monad
 import Test.Framework
@@ -22,8 +22,17 @@ prop_subsequences_of_interleaved :: [Integer] -> [Integer] -> Property
 prop_subsequences_of_interleaved xs ys =
     forAll (randomlyInterleave xs ys) $
         \zs -> (subsequenceOf xs zs) .&&. (subsequenceOf ys zs)
-    
+
+at_least_3_elements_greater_than_7 xs = 3 <= (length $ filter (>= 7) xs)
+
+test_stripUnneeded =
+    assert $
+    (==) [ 9, 8, 7 ] $
+    stripUnneeded at_least_3_elements_greater_than_7 $
+    concat [[ 1 .. 20 ], reverse [1 .. 20]]
+
 sequenceTests =
     testGroup "Sequences" [
-        testProperty "Two sequences are subsequences of any interleaved sequence" prop_subsequences_of_interleaved
+        testProperty "Two sequences are subsequences of any interleaved sequence" prop_subsequences_of_interleaved,
+        testCase "stripUnneeded" test_stripUnneeded
     ]
