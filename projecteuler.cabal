@@ -13,7 +13,7 @@ cabal-version:       >=1.8
 
 executable problems
   main-is: Main.hs
-  build-depends: base, criterion, containers, deepseq, parsec, digits
+  build-depends: base, criterion, containers, deepseq, parsec, digits, split
   ghc-options: -O2 -threaded -auto-all
 
 benchmark libraries
