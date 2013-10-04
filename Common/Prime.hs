@@ -14,7 +14,7 @@ primes = allPrimes
 prime :: Integer -> Bool
 prime = primeByPrp
 
-modExp :: Integer -> Integer -> Integer -> Integer
+modExp :: (Num a, Integral a) => a -> a -> a -> a
 modExp _ _ 0 = 1
 modExp mod base 1 = base `rem` mod
 modExp mod base exponent = flip rem mod $
@@ -32,6 +32,7 @@ oddPart n = if odd n then n else oddPart (n `div` 2)
 
 -- See Section 2.3 of http://primes.utm.edu/prove/merged.html
 isPrp n a = 1 == (modExp n a (n-1))
+isSprp :: (Eq a, Num a, Integral a) => a -> a -> Bool
 isSprp n a =
     let s  = primePower (n-1) 2
         d = oddPart $ n-1
@@ -40,8 +41,13 @@ isSprp n a =
        any (\r -> (n-1) == modExp n a' (2^r)) [0..s]
 
 -- See the table in Section 2.3 of http://primes.utm.edu/prove/merged.html
+primeByPrp :: Integer -> Bool
 primeByPrp n = let
-  checkPrp a = isSprp n a
+  checkPrpFast a = isSprp (fromIntegral n :: Int) (fromIntegral a)
+  checkPrpSlow a = isSprp n a
+  checkPrp = if (fromIntegral n) < (maxBound::Int)
+               then checkPrpFast
+               else checkPrpSlow
   in case () of
        _ | n < 4 -> n == 2 || n == 3
          | smallPrimeDivides n -> False
