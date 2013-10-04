@@ -45,7 +45,7 @@ primeByPrp :: Integer -> Bool
 primeByPrp n = let
   checkPrpFast a = isSprp (fromIntegral n :: Int) (fromIntegral a)
   checkPrpSlow a = isSprp n a
-  checkPrp = if (fromIntegral n) < (maxBound::Int)
+  checkPrp = if n < (fromIntegral (maxBound::Int))
                then checkPrpFast
                else checkPrpSlow
   in case () of
