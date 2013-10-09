@@ -1,4 +1,15 @@
-module Common.Prime (modExp, isSprp, primes, prime, primeByPrp, primeByFactoring, primePower, factors) where
+module Common.Prime
+    (
+     modExp,
+     isSprp,
+     primes,
+     prime,
+     primeByPrp,
+     primeByFactoring,
+     primePower,
+     factors,
+     rabin_miller
+    ) where
 import Prelude hiding (filter,
                        map,
                        null
@@ -7,6 +18,7 @@ import qualified Prelude
 import qualified Data.List as List
 import qualified Data.Maybe
 import Data.Set
+import System.Random
 
 sum' = fold (+) 0
 primes = allPrimes
@@ -14,25 +26,36 @@ primes = allPrimes
 prime :: Integer -> Bool
 prime = primeByPrp
 
-modExp :: (Num a, Integral a) => a -> a -> a -> a
+maybePrime :: StdGen -> Integer -> Bool
+maybePrime = rabin_miller
+
+modExp :: (Num a, Integral a, Show a) => a -> a -> a -> a
+modExp mod base n | mod < 0 = error ("Bad modExp modulus: " ++ show mod)
+modExp mod base n | n < 0 = error ("Bad modExp exponent: " ++ show n)
+modExp modulus base n | base < 0 = modExp modulus (n - (base `mod` modulus)) n
 modExp _ _ 0 = 1
 modExp mod base 1 = base `rem` mod
 modExp mod base exponent = flip rem mod $
     let next = modExp mod (base * base `rem` mod) (exponent `div` 2)
     in next * (if odd exponent then base else 1)
 
-primePower n p =
-  let f x i = let (q, r) = x `quotRem` p
-              in if r == 0
+-- | Write n = p^k * q. Returns (q, k).
+primeFreeRem n p = 
+ let f x i = let (q, r) = x `quotRem` p
+             in if r == 0
                  then f q (i+1)
-                 else i
+                 else (x, i)
   in f n 0
+
+primeFree n p = fst $ primeFreeRem n p
+primePower n p = snd $ primeFreeRem n p 
+
 
 oddPart n = if odd n then n else oddPart (n `div` 2)
 
 -- See Section 2.3 of http://primes.utm.edu/prove/merged.html
 isPrp n a = 1 == (modExp n a (n-1))
-isSprp :: (Eq a, Num a, Integral a) => a -> a -> Bool
+isSprp :: (Eq a, Num a, Integral a, Show a) => a -> a -> Bool
 isSprp n a =
     let s  = primePower (n-1) 2
         d = oddPart $ n-1
@@ -101,3 +124,32 @@ abundants n = filter isAbundant $ fromList [1..n]
 sumsFrom _ [] = empty
 sumsFrom limit z@(x:xs) = union first (sumsFrom limit xs) 
   where first = fromList $ [x + y | y <- z, x+y < limit]
+
+rabin_miller :: StdGen -> Integer -> Bool
+rabin_miller _ n | n <= 3 = prime n
+rabin_miller _ n | even n = False
+rabin_miller stdGen n =
+    let (q, t) = primeFreeRem (n-1) 2 
+        maxBound = 20
+        checkSquarings b = 
+            let cond n _ | n < 0 = error $ "Invalid n: " ++ show n
+                cond 0 _ = False
+                cond i x = 
+                    let newX = modExp n x 2
+                    in case () of
+                       _ | newX == 1     -> False
+                         | newX == n - 1 -> True
+                         | otherwise     -> cond (i-1) newX
+            in cond (t-1) b
+        checkBase a =
+            let b = modExp n a q
+            in if (b == 1) || (b == (n - 1))
+               then True
+               else checkSquarings b
+    in let xs = take maxBound $
+                List.filter (\x -> x /= 0 && x /= 1 && x /= (n-1)) $
+                List.map (\x -> x `mod` n) $
+                randoms stdGen
+       in all id $
+          List.map checkBase $
+          xs

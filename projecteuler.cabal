@@ -13,19 +13,19 @@ cabal-version:       >=1.8
 
 executable problems
   main-is: Main.hs
-  build-depends: base, criterion, containers, deepseq, parsec, digits, split
+  build-depends: base, criterion, containers, deepseq, parsec, digits, split, memoize, random
   ghc-options: -O2 -threaded -auto-all
 
 benchmark libraries
   type: exitcode-stdio-1.0
   hs-source-dirs: .
   main-is: BenchLibraries.hs
-  build-depends: base, criterion, containers, deepseq, parsec, digits
+  build-depends: base, criterion, containers, deepseq, parsec, digits, random
   ghc-options: -O2 -rtsopts -with-rtsopts=-M512m
 
 test-suite tests
   type: exitcode-stdio-1.0
-  build-depends: QuickCheck -any, base -any, test-framework, test-framework-quickcheck2, test-framework-hunit, digits, HUnit, containers
+  build-depends: QuickCheck -any, base -any, test-framework, test-framework-quickcheck2, test-framework-hunit, digits, HUnit, containers, random
   type: exitcode-stdio-1.0
   main-is: Tests/Main.hs
   buildable: True
